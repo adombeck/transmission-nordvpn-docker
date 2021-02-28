@@ -55,7 +55,7 @@ start_transmission_container() {
 		-v "$HOME/.config/transmission-daemon:/config" \
 		-v "$HOME/torrents:/downloads" \
 		--net="container:vpn" \
-		ghcr.io/linuxserver/transmission
+		transmission
 }
 
 # Import environment variables from config file
