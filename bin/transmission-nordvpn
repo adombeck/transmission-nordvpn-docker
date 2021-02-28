@@ -75,3 +75,5 @@ start_transmission_container
 # transmission daemon.
 transmission-remote-gtk
 
+# Stop the Docker containers
+docker stop transmission vpn
