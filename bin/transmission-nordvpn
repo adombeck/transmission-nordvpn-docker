@@ -22,6 +22,7 @@ start_vpn_container() {
 		--name "vpn" \
 		-e USER="${NORDVPN_USER}" \
 		-e PASS="${NORDVPN_PASS}" \
+		-e DEBUG=1 \
 		`# Required by nordvpn for setting iptables rules` \
 		--cap-add=NET_ADMIN --device /dev/net/tun \
 		--sysctl net.ipv4.conf.all.rp_filter=2 \
@@ -47,8 +48,12 @@ start_transmission_container() {
 		return
 	fi
 
+	# XXX: Generate the password and set it in ~/.config/transmission-remote-gtk/config.json
+	#      See https://stackoverflow.com/questions/42716734/modify-a-key-value-in-a-json-using-jq-in-place
 	docker run -d --rm \
 		--name="transmission" \
+		-e USER=user \
+		-e PASS=bt6JePL009DZdMdK2KBO3X0a \
 		-e PUID=1000 \
 		-e PGID=1000 \
 		-e TZ="Europe/Berlin" \
