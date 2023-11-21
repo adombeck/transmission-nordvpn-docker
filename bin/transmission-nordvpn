@@ -20,6 +20,8 @@ start_vpn_container() {
 	
 	docker run -d --rm \
 		--name "vpn" \
+		`# Print the logs to the journal` \
+		--log-driver=journald \
 		-e USER="${NORDVPN_USER}" \
 		-e PASS="${NORDVPN_PASS}" \
 		-e DEBUG=1 \
@@ -52,6 +54,8 @@ start_transmission_container() {
 	#      See https://stackoverflow.com/questions/42716734/modify-a-key-value-in-a-json-using-jq-in-place
 	docker run -d --rm \
 		--name="transmission" \
+		`# Print the logs to the journal` \
+		--log-driver=journald \
 		-e USER=user \
 		-e PASS=bt6JePL009DZdMdK2KBO3X0a \
 		-e PUID=1000 \
