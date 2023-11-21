@@ -1,0 +1,32 @@
+version: "3"
+services:
+  vpn:
+    image: ghcr.io/bubuntux/nordvpn
+    cap_add:
+      # Required by nordvpn for setting iptables rules
+      - NET_ADMIN
+    env_file:
+      - "$HOME/.config/transmission-nordvpn/nordvpn-secrets.env"
+    environment: # See https://github.com/bubuntux/nordvpn#environment-variables
+      - CONNECT=ch          # Connect to a server in Switzerland
+      - TECHNOLOGY=NordLynx # Use nordvpn's wireguard client
+      - DEBUG=1
+    ports:
+      - 127.0.0.1:9091:9091 # Forward the transmission port to localhost
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1  # Recomended if using ipv4 only
+      - net.ipv4.conf.all.rp_filter=2
+  transmission:
+    image: ghcr.io/linuxserver/transmission
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    env_file:
+      - "$HOME/.config/transmission-nordvpn/transmission-secrets.env"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ="Europe/Berlin"
+    volumes:
+      - "$HOME/.config/transmission-daemon:/config"
+      - "$HOME/torrents:/downloads"

@@ -1,0 +1,23 @@
+[Unit]
+PartOf=docker.service
+After=docker.service
+BindsTo=transmission-nordvpn-remote-gtk.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+WorkingDirectory=%h/.config/transmission-nordvpn
+ExecStart=/usr/bin/docker compose up -d --remove-orphans
+# Wait for the transmission port to be open, with a timeout of 5 seconds
+ExecStartPost=/usr/bin/bash -c ' \
+  while ! nc -z localhost 9091; do \
+    sleep 1; \
+    ((i=i+1)); \
+    if [ $i -gt 5 ]; then \
+      echo "Transmission port did not open within 5 seconds, aborting."; \
+      exit 1; \
+    fi \
+  done; \
+  sleep 1 \
+'
+ExecStop=/usr/bin/docker compose down

@@ -1,0 +1,7 @@
+[Unit]
+BindsTo=transmission-nordvpn-containers.service
+After=transmission-nordvpn-containers.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/transmission-remote-gtk

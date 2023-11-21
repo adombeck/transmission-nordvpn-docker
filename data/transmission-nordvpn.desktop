@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Transmission NordVPN
-Exec=transmission-nordvpn
+Exec=systemctl --user start transmission-nordvpn-remote-gtk.service
 Terminal=false
 Categories=Network;
 Keywords=torrents;downloading;uploading;share;sharing;vpn;nordvpn;
