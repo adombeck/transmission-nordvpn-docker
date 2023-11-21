@@ -22,8 +22,7 @@ start_vpn_container() {
 		--name "vpn" \
 		`# Print the logs to the journal` \
 		--log-driver=journald \
-		-e USER="${NORDVPN_USER}" \
-		-e PASS="${NORDVPN_PASS}" \
+		-e TOKEN="${NORDVPN_TOKEN}" \
 		-e DEBUG=1 \
 		`# Required by nordvpn for setting iptables rules` \
 		--cap-add=NET_ADMIN --device /dev/net/tun \
@@ -71,8 +70,7 @@ start_transmission_container() {
 export $(grep -v '^#' "${CONFIG_FILE}" | xargs)
 
 # Check that required environment variables are set
-: "${NORDVPN_USER}"
-: "${NORDVPN_PASS}"
+: "${NORDVPN_TOKEN}"
 
 # Start the VPN container
 start_vpn_container
