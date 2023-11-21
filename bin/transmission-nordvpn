@@ -60,7 +60,7 @@ start_transmission_container() {
 		-v "$HOME/.config/transmission-daemon:/config" \
 		-v "$HOME/torrents:/downloads" \
 		--net="container:vpn" \
-		transmission
+		linuxserver/transmission
 }
 
 # Import environment variables from config file
