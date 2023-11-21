@@ -6,6 +6,7 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 CONFIG_FILE="$HOME/.config/transmission-nordvpn.conf"
 
+mkdir -p "$HOME/bin"
 ln -s "${SCRIPT_DIR}/bin/"* "$HOME/bin/"
 ln -s "${SCRIPT_DIR}/data/"*.desktop "$HOME/.local/share/applications/"
 
