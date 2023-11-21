@@ -33,7 +33,7 @@ start_vpn_container() {
 		-e TECHNOLOGY=NordLynx \
 		`# Forward the transmission port to localhost` \
 		-p 9091:9091 \
-		bubuntux/nordvpn
+		ghcr.io/bubuntux/nordvpn
 }
 
 start_transmission_container() {
