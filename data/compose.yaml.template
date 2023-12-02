@@ -6,7 +6,7 @@ services:
       # Required by nordvpn for setting iptables rules
       - NET_ADMIN
     env_file:
-      - "$HOME/.config/transmission-nordvpn/nordvpn-secrets.env"
+      - "{{CONFIG_DIR}}/nordvpn-secrets.env"
     environment: # See https://github.com/bubuntux/nordvpn#environment-variables
       - CONNECT=ch          # Connect to a server in Switzerland
       - TECHNOLOGY=NordLynx # Use nordvpn's wireguard client
@@ -22,11 +22,11 @@ services:
     depends_on:
       - vpn
     env_file:
-      - "$HOME/.config/transmission-nordvpn/transmission-secrets.env"
+      - "{{CONFIG_DIR}}/transmission-secrets.env"
     environment:
       - PUID=1000
       - PGID=1000
       - TZ="Europe/Berlin"
     volumes:
-      - "$HOME/.config/transmission-daemon:/config"
-      - "$HOME/torrents:/downloads"
+      - "{{CONFIG_DIR}}/transmission-daemon:/config"
+      - "{{DOWNLOADS_DIR}}:/downloads"

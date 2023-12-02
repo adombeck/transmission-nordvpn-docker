@@ -1,0 +1,2 @@
+{{USER}} ALL = NOPASSWD: {{DOCKER_COMPOSE}} up -d --remove-orphans
+{{USER}} ALL = NOPASSWD: {{DOCKER_COMPOSE}} down
