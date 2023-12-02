@@ -1,6 +1,4 @@
 [Unit]
-PartOf=docker.service
-After=docker.service
 BindsTo=transmission-nordvpn-remote-gtk.service
 
 [Service]
