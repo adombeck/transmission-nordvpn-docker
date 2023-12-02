@@ -1,5 +1,5 @@
 [Unit]
-BindsTo=transmission-nordvpn-remote-gtk.service
+PartOf=transmission-nordvpn-remote-gtk.service
 
 [Service]
 Type=oneshot
