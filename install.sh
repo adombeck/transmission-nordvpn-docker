@@ -54,7 +54,7 @@ else
     -e "s|{{USER}}|${USER}|g" \
     "${TEMPLATE}" > "${TMP_PATH}"
 
-  echo "Installing sudoers file in ${SUDOERS_FILE}"
+  echo "Installing sudoers file to ${SUDOERS_FILE}..."
   # Create the /etc/sudoers.d directory if it doesn't exist
   if [ ! -d /etc/sudoers.d ]; then
     sudo install -d -m 700 /etc/sudoers.d
@@ -69,26 +69,37 @@ fi
 # Create the systemd data dir
 mkdir -p "${SYSTEMD_DATA_DIR}"
 
-# Create the transmission-nordvpn-containers.service file from the template
-CONTAINERS_SERVICE_FILE="${SYSTEMD_DATA_DIR}/transmission-nordvpn-containers.service"
+# Create the containers service file from the template
+DEST="${SYSTEMD_DATA_DIR}/transmission-nordvpn-containers.service"
 TEMPLATE="${SCRIPT_DIR}/data/transmission-nordvpn-containers.service.template"
 TMP_PATH="${BUILD_DIR}/transmission-nordvpn-containers.service"
 sed \
   -e "s|{{DOCKER_COMPOSE}}|${DOCKER_COMPOSE}|g" \
   -e "s|{{USER}}|${USER}|g" \
   "${TEMPLATE}" > "${TMP_PATH}"
-install -m 600 "${TMP_PATH}" "${CONTAINERS_SERVICE_FILE}"
+install -m 600 "${TMP_PATH}" "${DEST}"
 
-# Create symlinks to the systemd service files
+# Install the remote-gtk service file
+DEST="${SYSTEMD_DATA_DIR}/transmission-nordvpn-remote-gtk.service"
+SRC="${SCRIPT_DIR}/data/transmission-nordvpn-remote-gtk.service"
+install -m 600 "${SRC}" "${DEST}"
+
+# Install the service files
 for service_file in "${SCRIPT_DIR}/data/"*.service; do
   ln -sf "${service_file}" "${SYSTEMD_DATA_DIR}/"
 done
 
-# Install the desktop launcher file
+echo "Reloading systemd user unit files..."
+systemctl --user daemon-reload
+
+# Install the desktop file
+SRC="${SCRIPT_DIR}/data/transmission-nordvpn.desktop"
+DEST="${APPLICATIONS_DIR}/transmission-nordvpn.desktop"
+echo "Installing desktop file to ${DEST}..."
 if [ ! -d "${APPLICATIONS_DIR}" ]; then
   install -d -m 700 "${APPLICATIONS_DIR}"
 fi
-ln -sf "${SCRIPT_DIR}/data/"*.desktop "${APPLICATIONS_DIR}/"
+install -m 600 "${SRC}" "${DEST}"
 
 # Create the config dir
 install -d -m 700 "${CONFIG_DIR}"
@@ -120,14 +131,10 @@ else
   echo "PASS=${TRANSMISSION_PASSWORD}" >> "${TRANSMISSION_SECRETS_FILE}"
 fi
 
-echo "Creating transmission-remote-gtk config file"
-# Check if a transmission-remote-gtk config file exists
+echo "Checking if transmission-remote-gtk config file exists..."
 if [ -f "${TRANSMISSION_REMOTE_CONFIG_FILE}" ]; then
-  echo "A transmission-remote-gtk config file already exists. You can keep it
-and configure the password manually, or overwrite it with a new config
-file that has the password already set.
-Please make sure that transmission-remote-gtk isn't running when you
-choose to overwrite the config file."
+  echo "A transmission-remote-gtk config file already exists. You can keep it and configure the password manually, or overwrite it with a new config file that has the password already set.
+Please make sure that transmission-remote-gtk isn't running when you choose to overwrite the config file."
   read -r -p "Overwrite existing config file? [y/N] " overwrite
   if [ "${overwrite}" != "y" ]; then
     exit
@@ -135,6 +142,8 @@ choose to overwrite the config file."
 fi
 
 # Create a transmission-remote-gtk config file with the password
+echo "Creating transmission-remote-gtk config file..."
+install -d -m 700 "$(dirname "${TRANSMISSION_REMOTE_CONFIG_FILE}")"
 cat > "${TRANSMISSION_REMOTE_CONFIG_FILE}" << EOF
 {
   "profiles" : [
