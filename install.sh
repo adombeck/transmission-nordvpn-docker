@@ -3,7 +3,7 @@
 set -eu
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-DOWNLOADS_DIR="$HOME/torrents"
+DOWNLOADS_DIR="${XDG_DOWNLOAD_DIR:-$HOME/Downloads}/transmission-nordvpn"
 SYSTEMD_DATA_DIR="$HOME/.local/share/systemd/user"
 APPLICATIONS_DIR="$HOME/.local/share/applications"
 CONFIG_DIR="$HOME/.config/transmission-nordvpn"
@@ -103,6 +103,9 @@ install -m 600 "${SRC}" "${DEST}"
 
 # Create the config dir
 install -d -m 700 "${CONFIG_DIR}"
+
+# Create the downloads dir
+install -d -m 700 "${DOWNLOADS_DIR}"
 
 # Create the compose.yaml file from the template
 TEMPLATE="${SCRIPT_DIR}/data/compose.yaml.template"
