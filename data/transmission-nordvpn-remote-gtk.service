@@ -4,5 +4,6 @@ After=transmission-nordvpn-containers.service
 
 [Service]
 Type=simple
+Environment=XDG_CONFIG_HOME=%h/.config/transmission-nordvpn
 ExecStart=/usr/bin/transmission-remote-gtk
 ExecStopPost=/bin/systemctl --user --no-block stop transmission-nordvpn-containers.service
